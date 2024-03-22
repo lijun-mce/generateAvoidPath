@@ -1,3 +1,0 @@
-/home/lijun/pz_code/generate_path/build/CMakeFiles/rebuild_cache.dir
-/home/lijun/pz_code/generate_path/build/CMakeFiles/generate_path.dir
-/home/lijun/pz_code/generate_path/build/CMakeFiles/edit_cache.dir

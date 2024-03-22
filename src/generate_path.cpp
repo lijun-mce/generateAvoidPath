@@ -8,7 +8,8 @@
 using namespace std;
 
 // 主函数
-vector<cv::Point> GeneratePath::generateNewPath(const cv::Mat &map, const vector<cv::Point> &path, cv::Point robot_pose) {
+vector<cv::Point> GeneratePath::generateNewPath(const cv::Mat &map, const vector<cv::Point> &path, cv::Point line_start, cv::Point line_end,
+                                                cv::Point robot_pose) {
     if (map.empty()) {
         std::cout << "map is empty, error !" << endl;
         return path;
@@ -22,11 +23,11 @@ vector<cv::Point> GeneratePath::generateNewPath(const cv::Mat &map, const vector
         bool sign = linePassable(map, path[i], path[i + 1]);
         if (!sign) {
             cout << "遇到障碍物，需要重新生成轨迹 !" << endl;
-            findEdgePath(robot_pose, map, path.front(), path.back());
-            break;
+            findEdgePath(robot_pose, map, line_start, line_end);
+            return new_path_;
         }
     }
-    return new_path_;
+    return path;
 }
 
 // 寻找边界路径
@@ -60,7 +61,7 @@ bool GeneratePath::findEdgePath(cv::Point robot_pose, const cv::Mat &map, cv::Po
     cv::findContours(temp_map, all_contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
     cout << "contour.size():" << all_contours.size() << endl;
 
-    // 寻找最大的轮廓 ？ TODO:需要验证
+    // 寻找最大的内轮廓 ？ TODO:需要验证
     int max_index = 0, max_size = 0;
     for (int i = 0; i < all_contours.size(); ++i) {
         if (all_contours[i].size() > max_size) {

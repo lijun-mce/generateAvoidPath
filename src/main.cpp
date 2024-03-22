@@ -36,7 +36,7 @@ int main() {
     // 机器人位置
     cv::Point robot_pose(320, 320);
     GeneratePath generate_path_test;
-    std::vector<cv::Point> new_path = generate_path_test.generateNewPath(test_map, path, robot_pose);
+    std::vector<cv::Point> new_path = generate_path_test.generateNewPath(test_map, path, pt_start, pt_end, robot_pose);
 
     cv::cvtColor(example, example, CV_GRAY2BGR);
     for (size_t i = 0; i < new_path.size(); ++i) {
