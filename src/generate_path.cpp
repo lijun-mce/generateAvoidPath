@@ -19,15 +19,36 @@ vector<cv::Point> GeneratePath::generateNewPath(const cv::Mat &map, const vector
         return path;
     }
 
-    for (int i = 0; i < path.size() - 1; ++i) {
-        bool sign = linePassable(map, path[i], path[i + 1]);
+    // 路径裁剪
+    old_path_ = prunePath(robot_pose, path);
+
+    for (int i = 0; i < old_path_.size() - 1; ++i) {
+        bool sign = linePassable(map, old_path_[i], old_path_[i + 1]);
         if (!sign) {
             cout << "遇到障碍物，需要重新生成轨迹 !" << endl;
             findEdgePath(robot_pose, map, line_start, line_end);
             return new_path_;
         }
     }
-    return path;
+    return old_path_;
+}
+
+// 裁剪路径
+vector<cv::Point> GeneratePath::prunePath(cv::Point robot_pose, const vector<cv::Point> &path) {
+    vector<cv::Point> old_path = path;
+    float min_dist = 1e6;
+    int min_index = 0;
+    float x = robot_pose.x;
+    float y = robot_pose.y;
+    for (size_t i = 0; i < old_path.size(); i++) {
+        float dist = (old_path[i].x - x) * (old_path[i].x - x) + (old_path[i].y - y) * (old_path[i].y - y);
+        if (dist < min_dist) {
+            min_dist = dist;
+            min_index = i;
+        }
+    }
+    old_path.erase(old_path.begin(), old_path.begin() + min_index);
+    return old_path;
 }
 
 // 寻找边界路径

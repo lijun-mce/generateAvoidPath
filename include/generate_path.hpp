@@ -29,6 +29,8 @@ public:
                                       cv::Point robot_pose = cv::Point(-1, -1));
 
 private:
+    // 裁剪路径
+    vector<cv::Point> prunePath(cv::Point robot_pose, const vector<cv::Point> &path);
     // 寻找边界路径
     bool findEdgePath(cv::Point robot_pose, const cv::Mat &map, cv::Point start, cv::Point end);
     // 计算最近点位
@@ -40,4 +42,5 @@ private:
 
 private:
     std::vector<cv::Point> new_path_;
+    std::vector<cv::Point> old_path_;
 };
